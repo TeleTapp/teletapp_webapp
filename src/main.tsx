@@ -1,18 +1,17 @@
 import { Spinner } from "@nextui-org/spinner";
 import { NextUIProvider } from "@nextui-org/system";
 import i18n from "i18next";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import { WebAppProvider } from "@vkruglikov/react-telegram-web-app";
-
 import TelegramThemeProvider from "./components/providers/telegram-theme-provider";
 
 import routes from "~react-pages";
-// import { ScrollArea } from "./components/ui/scroll-area";
 import "./index.css";
 import { resources } from "./locales";
+import { authBot } from "./lib/api/auth-bot";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
@@ -20,14 +19,24 @@ i18n.use(initReactI18next).init({
   resources,
 });
 
+function AppRouter() {
+  return <Suspense fallback={<Spinner />}>{useRoutes(routes)}</Suspense>;
+}
+
 function App() {
+  const [loaded, setLoaded] = useState(false);
+
+  useLayoutEffect(() => {
+    authBot().then((res) => {
+      console.log(res);
+
+      setLoaded(true);
+    });
+  }, []);
+
   return (
     <div className="px-6 py-6 bg-background">
-      {/* <ScrollArea className="h-[100vh]"> */}
-      {/* <div className="px-5 py-6"> */}
-      <Suspense fallback={<Spinner />}>{useRoutes(routes)}</Suspense>
-      {/* </div> */}
-      {/* </ScrollArea> */}
+      {loaded ? <AppRouter /> : <Spinner />}
     </div>
   );
 }
