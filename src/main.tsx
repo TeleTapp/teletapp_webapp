@@ -1,7 +1,7 @@
 import { Spinner } from "@nextui-org/spinner";
 import { NextUIProvider } from "@nextui-org/system";
 import i18n from "i18next";
-import React, { Suspense, useEffect, useLayoutEffect, useState } from "react";
+import React, { Suspense, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
