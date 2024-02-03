@@ -26,9 +26,9 @@ jobs:
       - name: Deploy to server
         if: ${{ steps.parse_tag.outputs.env == 'prod' }}
         run: |
-          ssh user@server "cd /apps/teletapp_webapp/teletapp_webapp && git pull && docker compose up -d"
+          ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/teletapp_webapp && git pull && docker compose up -d"
 
       - name: Deploy to dev server
         if: ${{ steps.parse_tag.outputs.env == 'dev' }}
         run: |
-          ssh user@dev-server "cd /apps/teletapp_webapp/dev_teletapp_webapp && git pull && docker compose up -d"
+          ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/dev_teletapp_webapp && git pull && docker compose up -d"
