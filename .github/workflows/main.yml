@@ -9,24 +9,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Get tag
-        id: get_tag
-        run: echo "tag=${{ github.ref }}"
-
-      - name: Parse tag
-        id: parse_tag
-        run: |
-          tag_name=${{ steps.get_tag.outputs.tag }}
-          env=${{ tag_name:2:8 }}
-          echo "env=${env}"
-
+      
       - name: Deploy to server
-        if: ${{ steps.parse_tag.outputs.env == 'prod' }}
         run: |
           ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/teletapp_webapp && git pull && docker compose up -d"
 
       - name: Deploy to dev server
-        if: ${{ steps.parse_tag.outputs.env == 'dev' }}
         run: |
           ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/dev_teletapp_webapp && git pull && docker compose up -d"
