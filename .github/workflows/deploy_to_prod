@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
          
       - name: Deploy to PROD environment
-        if: github.ref_type == 'tag
+        if: github.ref_type == 'tag'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
