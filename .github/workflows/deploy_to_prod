@@ -3,7 +3,7 @@ name: Deploy to Prod
 on:
   push:
     tags:
-      - 'v*[0-9]'
+      - 'v\d+\.\d+\.\d+'
 
 jobs:
   build:
