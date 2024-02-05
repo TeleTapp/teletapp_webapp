@@ -2,6 +2,8 @@ name: Deploy
 
 on:
   push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -9,11 +11,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Deploy to server
-        run: |
-          ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/teletapp_webapp && git pull && docker compose up -d"
+         
+      - name: Deploy to DEV environment
+        if: github.ref_type == 'tag' && endsWith(github.ref_name, 'dev')
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /apps/dev_teletapp_webapp
+            pwd
+            ls -la
 
-      - name: Deploy to dev server
-        run: |
-          ssh -i id_rsa root@185.43.6.202 "cd /apps/teletapp_webapp/dev_teletapp_webapp && git pull && docker compose up -d"
+      - name: Deploy to PROD environment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /apps/teletapp_webapp
+            pwd
+            ls -la
